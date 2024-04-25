@@ -9,7 +9,7 @@
                 <Dashboard v-show="page == 0" :user="user" />
                 <UserProfile v-show="page == 1" />
                 <MyBoards v-show="page == 2" />
-                <CreateBoards v-show="page == 3" />
+                <CreateBoards v-show="page == 3" :user="user" />
             </div>
         </div>
     </div>
