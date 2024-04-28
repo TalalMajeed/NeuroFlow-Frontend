@@ -3,7 +3,7 @@ import App from './App.vue'
 import { createApp } from 'vue'
 import "./styles/index.css"
 
-export const API = "http://localhost:5000";
+export const API = "http://localhost:5000/";
 export let TOKEN = "";
 export let UID = "";
 

@@ -8,7 +8,6 @@ let tileSize = 40;
 
 console.log(canvasWidth, canvasHeight);
 
-//Add resize event listener
 window.addEventListener("resize", () => {
     canvasWidth = canvas.width;
     canvasHeight = canvas.height;

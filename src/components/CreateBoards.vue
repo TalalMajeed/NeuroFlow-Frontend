@@ -12,19 +12,33 @@
 
 <script setup>
 
-import { defineProps, onMounted, ref } from 'vue';
+import { defineProps, onMounted, ref, watch } from 'vue';
 
+const widthShift = ref(422);
 const props = defineProps({
-    user: Object
+    user: Object,
+    open: Boolean
 });
 
 window.addEventListener('resize', () => {
-    cw.value = window.innerWidth - 422;
+    cw.value = window.innerWidth - widthShift.value;
     ch.value = window.innerHeight - 65;
 })
 
-const cw = ref(window.innerWidth - 422);
+const cw = ref(window.innerWidth - widthShift.value);
 const ch = ref(window.innerHeight - 65);
+
+watch(() => props.open, (value) => {
+    if (value) {
+        widthShift.value = 422;
+    } else {
+        widthShift.value = 600;
+    }
+    cw.value = window.innerWidth - widthShift.value;
+    ch.value = window.innerHeight - 65;
+})
+
+
 
 onMounted(() => {
     const script = document.createElement('script');

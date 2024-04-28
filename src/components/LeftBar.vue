@@ -8,9 +8,13 @@
 </template>
 
 <script setup>
-import { ref, watch, defineEmits } from 'vue';
+import { ref, watch, defineEmits, defineProps } from 'vue';
 
 const emit = defineEmits(["trigger"]);
+
+const props = defineProps({
+    page: Number
+});
 
 const items = ref([
     { title: 'Dashboard', icon: 'mdi-view-dashboard' },
@@ -24,6 +28,9 @@ watch(activeIndex, (newValue, oldValue) => {
     emit("trigger", newValue);
 });
 
+watch(() => props.page, (newValue, oldValue) => {
+    activeIndex.value = newValue;
+});
 </script>
 
 <style scoped>

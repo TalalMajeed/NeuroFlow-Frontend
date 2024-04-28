@@ -1,4 +1,5 @@
 <template>
+
   <div class="container">
     <div class="box" :style="boxStyle()">
 
@@ -35,8 +36,10 @@ import { ref } from "vue";
 import { API, setToken, setUID } from "../main"
 
 const showPassword = ref(false);
+
 const emailInput = ref(null);
 const passwordInput = ref(null);
+
 const loading = ref(false);
 const error = ref(false);
 
@@ -65,35 +68,43 @@ function login() {
     error.value = false;
     if (!emailInput.value.value || !passwordInput.value.value) return;
     loading.value = true;
-    const response = await fetch(API + '/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email: emailInput.value.value,
-        password: passwordInput.value.value
-      })
-    });
-    const data = await response.json();
-    console.log(data)
-    loading.value = false;
-    if (data['status'] == '200') {
-      console.log(data['data'])
-      let temp = JSON.parse(data['data'])
-      setToken(temp['token']);
-      setUID(temp['uid']);
-      router.push("/panel");
+    try {
+      const response = await fetch(API + '/loginUser', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: emailInput.value.value,
+          password: passwordInput.value.value
+        })
+      });
+      const data = await response.json();
+      console.log(data)
+      loading.value = false;
+      if (data['status'] == '200') {
+        console.log(data['data'])
+        let temp = JSON.parse(data['data'])
+        setToken(temp['token']);
+        setUID(temp['uid']);
+        router.push("/panel");
+      }
+      else {
+        error.value = true;
+      }
     }
-    else {
+    catch (e) {
+      console.log(e);
       error.value = true;
+      loading.value = false;
     }
+
   }
   checkUser();
 }
 
 function shift() {
-  router.push("/signup");
+  router.push("/register");
 }
 </script>
 
@@ -106,6 +117,8 @@ function shift() {
 }
 
 .container {
+  position: absolute;
+  top: 0;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -218,6 +231,12 @@ img {
     align-items: center;
     justify-content: center;
     max-height: 100%;
+    box-shadow: none;
+    border-radius: 0%;
+  }
+
+  .container {
+    background: none;
   }
 
   .phone {

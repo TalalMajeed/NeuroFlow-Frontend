@@ -8,9 +8,10 @@ import { TOKEN, UID } from '../main';
 if (!TOKEN || !UID) {
     router.push("/welcome");
 }
-if (TOKEN === "" || UID === "") {
+else if (TOKEN === "" || UID === "") {
     router.push("/welcome");
 }
-
-router.push("/panel");
+else {
+    router.push("/panel");
+}
 </script>
