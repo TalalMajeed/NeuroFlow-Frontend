@@ -7,16 +7,13 @@
                 <LeftBar @trigger="setPage" :page="page" />
             </div>
             <div class="center">
-                <Dashboard v-show="page == 0" :user="user" :setPage="setPage" />
+                <Dashboard v-show="page == 0" :user="user" :setPage="setPage" :page="page" @trigger="setBoard" />
                 <UserProfile v-show="page == 1" :user="user" :page="page" />
-                <MyBoards v-show="page == 2" />
-                <CreateBoards v-show="page == 3" :user="user" :open="openMenu" />
+                <MyBoards v-show="page == 2" :user="user" :page="page" @trigger="setBoard" :setPage="setPage" />
+                <CreateBoards v-show="page == 3" :user="user" :open="openMenu" :board="board" :setPage="setPage" />
             </div>
         </div>
     </div>
-
-
-
 </template>
 
 <script setup>
@@ -24,11 +21,17 @@ import NavBar from "@/components/NavBar.vue";
 import { TOKEN, API, UID, setToken, setUID } from "../main";
 import router from '../router';
 import { ref } from 'vue';
+import MyBoards from "@/components/MyBoards.vue";
 
 const user = ref(null);
 const auth = ref(true);
 const openMenu = ref(true);
 const page = ref(0);
+const board = ref(null);
+
+const setBoard = (b) => {
+    board.value = [b, new Date().getTime()];
+}
 
 const setPage = (p) => {
     page.value = p;
@@ -123,6 +126,7 @@ const checkToken = async () => {
 }
 
 checkToken();
+RenewToken();
 setInterval(() => {
     RenewToken();
 }, 1000 * 60 * 10);
@@ -145,12 +149,5 @@ setInterval(() => {
     height: 100%;
     display: flex;
     background-color: var(--primary-light);
-}
-
-@media screen and (max-width: 600px) {
-    .left {
-        display: none;
-    }
-
 }
 </style>

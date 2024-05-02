@@ -5,6 +5,8 @@ import Welcome from '../pages/welcome.vue'
 import Login from '../pages/login.vue'
 import Panel from '../pages/panel.vue'
 import Register from '../pages/register.vue'
+import Info from '../pages/info.vue'
+import Forgot from '../pages/forgot.vue'
 
 const routes = [
   {
@@ -31,6 +33,16 @@ const routes = [
     path: '/register',
     name: 'Register',
     component: Register
+  },
+  {
+    path: '/info',
+    name: 'Info',
+    component: Info
+  },
+  {
+    path: '/forgot',
+    name: 'Forgot',
+    component: Forgot
   },
   {
     path: '/:pathMatch(.*)*',

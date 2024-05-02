@@ -71,7 +71,7 @@
             <div class="heading">Reset & Delete</div>
             <div class="divider2">
                 <div>Click the Button to Reset your Password!</div>
-                <v-btn class="button">Reset Password</v-btn>
+                <v-btn class="button" @click="resetPassword">Reset Password</v-btn>
             </div>
             <div class="divider2" style="margin-top:12px;">
                 <div>Click the Button to Delete your Account!</div>
@@ -101,7 +101,7 @@
 
 <script setup>
 import { ref, onMounted, watch } from 'vue';
-import { TOKEN, API, setToken, setUID } from '@/main';
+import { TOKEN, API, setToken, setUID, RESET, setRESET } from '@/main';
 import router from '../router';
 
 const props = defineProps({
@@ -173,6 +173,20 @@ const submit = async () => {
     }
     catch (e) {
         console.log(e);
+        loading.value = false;
+    }
+}
+
+const resetPassword = () => {
+    loading.value = true;
+    try {
+        setRESET(true);
+        router.push("/forgot");
+    }
+    catch (e) {
+        console.log(e);
+    }
+    finally {
         loading.value = false;
     }
 }

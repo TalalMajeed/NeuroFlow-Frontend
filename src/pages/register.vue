@@ -1,42 +1,43 @@
 <template>
-    <div class="container">
-        <div class="box" :style="boxStyle()">
+    <div class="registration-container">
+        <div class="registration-box" :style="boxStyle()">
 
-            <div class="heading">Register Account</div>
-            <div class="desc">Create Account to Continue!</div>
-            <v-form class="form" @submit.prevent>
-                <v-responsive class="input-bar">
-                    <v-text-field class="input-handler" :rules="[required]" ref="NameInput" label="Name"
+            <div class="registration-heading">Register Account</div>
+            <div class="registration-description">Create Account to Continue!</div>
+            <v-form class="registration-form" @submit.prevent>
+                <v-responsive class="registration-input-bar">
+                    <v-text-field class="registration-input-handler" :rules="[required]" ref="NameInput" label="Name"
                         variant="outlined"></v-text-field>
 
-                    <div class="Occupationandgendercontainer">
-                        <div class="occupation">
-                            <v-text-field class="input-handler" :rules="[required]" ref="OccupationInput"
+                    <div class="occupation-and-gender-container">
+                        <div class="registration-occupation">
+                            <v-text-field class="registration-input-handler" :rules="[required]" ref="OccupationInput"
                                 label="Occupation" variant="outlined"></v-text-field>
                         </div>
-                        <div class="gender">
-                            <v-autocomplete v-model="GenderInput" class="input-auto" label="Gender" :rules="[required]"
-                                :items="['Male', 'Female']" variant="outlined"></v-autocomplete>
+                        <div class="registration-gender">
+                            <v-autocomplete v-model="GenderInput" class="registration-input-auto" label="Gender"
+                                :rules="[required]" :items="['Male', 'Female']" variant="outlined"></v-autocomplete>
                         </div>
                     </div>
 
-                    <div class="h2line"></div>
+                    <div class="registration-h2line"></div>
 
 
-                    <v-text-field class="input-handler" :rules="[required]" ref="emailInput" label="Email"
+                    <v-text-field class="registration-input-handler" :rules="[required]" ref="emailInput" label="Email"
                         variant="outlined"></v-text-field>
-                    <v-text-field class="input-handler" :rules="[required]" ref="passwordInput" label="Password"
-                        :type="showPassword ? 'text' : 'password'"
+                    <v-text-field class="registration-input-handler" :rules="[required]" ref="passwordInput"
+                        label="Password" :type="showPassword ? 'text' : 'password'"
                         :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
                         @click:append-inner="togglePassword" variant="outlined"></v-text-field>
                 </v-responsive>
 
 
-                <div class="hline"></div>
-                <v-btn :loading="loading" @click="login" class="button" type="submit" block>Sign up</v-btn>
-                <v-alert v-if="error.length > 0" class="error" variant="tonal" color="error" :text="error"></v-alert>
-                <div class="signup">Already have an Account?
-                    <v-btn @click="shift" class="forgot" variant="text">Log in!</v-btn>
+                <div class="registration-hline"></div>
+                <v-btn :loading="loading" @click="login" class="registration-button" type="submit" block>Sign up</v-btn>
+                <v-alert v-if="error.length > 0" class="registration-error" variant="tonal" color="error"
+                    :text="error"></v-alert>
+                <div class="registration-signup">Already have an Account?
+                    <v-btn @click="shift" class="registration-login-button" variant="text">Log in!</v-btn>
                 </div>
             </v-form>
 
@@ -47,7 +48,7 @@
 <script setup>
 import router from "./../router/index";
 import { ref } from "vue";
-import { API, setToken, setUID } from "../main"
+import { API, setREG, setToken, setUID } from "../main"
 
 const showPassword = ref(false);
 const NameInput = ref(null);
@@ -107,7 +108,8 @@ function login() {
                 let temp = JSON.parse(data['data'])
                 setToken(temp['token']);
                 setUID(temp['uid']);
-                router.push("/panel");
+                setREG(true);
+                router.push("/info");
             }
             else {
                 error.value = data['message'];
@@ -129,7 +131,7 @@ function shift() {
 </script>
 
 <style scoped>
-.form {
+.registration-form {
     width: 70%;
     display: flex;
     flex-direction: column;
@@ -137,7 +139,7 @@ function shift() {
     margin-right: 5px;
 }
 
-.container {
+.registration-container {
     position: absolute;
     top: 0;
     display: flex;
@@ -148,7 +150,7 @@ function shift() {
     background: var(--gradient-color)
 }
 
-.box {
+.registration-box {
     width: 500px;
     height: 95%;
     background-color: white;
@@ -162,25 +164,18 @@ function shift() {
     overflow-y: auto;
 }
 
-
-img {
-    width: 160px;
-    margin-top: 20px;
-    user-select: none;
-}
-
-.heading {
+.registration-heading {
     font-size: 32px;
     font-weight: 600;
     margin: 70px 0 20px 0;
 }
 
-.desc {
+.registration-description {
     font-size: 15px;
     margin: 5px 50px;
 }
 
-.hline {
+.registration-hline {
     width: 100%;
     height: 1px;
     background-color: #ccc;
@@ -188,14 +183,14 @@ img {
     margin-bottom: 20px;
 }
 
-.h2line {
+.registration-h2line {
     width: 100%;
     height: 1px;
     background-color: #ccc;
     margin-bottom: 20px;
 }
 
-.button {
+.registration-button {
     margin-top: 20px;
     background-color: var(--primary);
     color: white;
@@ -208,24 +203,23 @@ img {
     height: 50px !important;
 }
 
-.input-bar {
+.registration-input-bar {
     width: 100%;
     display: flex;
     flex-grow: 0;
     padding: 40px 0 0 0;
 }
 
-.forgot {
+.registration-forgot {
     font-size: 16px;
     color: var(--primary);
     text-transform: none;
     letter-spacing: 0px;
     cursor: pointer;
     padding: 5px;
-
 }
 
-.signup {
+.registration-signup {
     font-size: 16px;
     margin-top: 20px;
     margin-bottom: 40px;
@@ -233,66 +227,78 @@ img {
     align-items: center
 }
 
-.forgot-container {
+.registration-forgot-container {
     display: flex;
     justify-content: end;
     width: 100%;
 }
 
-.input-handler {
+.registration-input-handler {
     width: 100%;
     margin-bottom: 5px;
     text-align: left;
 }
 
-.error {
+.registration-error {
     width: 100%;
     margin-top: 20px;
     margin-bottom: -10px;
+}
 
+.registration-login-button {
+    font-size: 16px;
+    color: var(--primary);
+    text-transform: none;
+    letter-spacing: 0px;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.occupation-and-gender-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.registration-gender {
+    width: 165px;
+}
+
+.registration-occupation {
+    width: 165px;
 }
 
 @media screen and (max-width: 500px) {
-    .box {
+    .registration-box {
         width: 100%;
         height: 100%;
         align-items: center;
         justify-content: center;
         max-height: 100%;
         border-radius: 0%;
+        box-shadow: none;
     }
 
-    .container {
+    .registration-container {
         background: none;
     }
 
-    .phone {
-        flex-grow: 0;
-        height: 30px;
-    }
-
-    .form {
+    .registration-form {
         width: 85%;
     }
 
-    .heading {
+    .registration-heading {
         margin: 40px 0 10px 0;
     }
-}
 
-.Occupationandgendercontainer {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    width: 100%;
+    .registration-gender,
+    .registration-occupation {
+        width: 100%;
+    }
 
-}
-
-.gender {
-    width: 165px;
-}
-
-.occupation {
-    width: 165px;
+    .occupation-and-gender-container {
+        gap: 20px;
+    }
 }
 </style>

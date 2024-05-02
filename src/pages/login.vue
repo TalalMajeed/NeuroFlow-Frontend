@@ -1,31 +1,27 @@
 <template>
-
-  <div class="container">
-    <div class="box" :style="boxStyle()">
-
-      <div class="heading">Login Account</div>
-      <div class="desc">Please Login to your Account</div>
-      <v-form class="form" @submit.prevent>
-        <v-responsive class="input-bar">
-          <v-text-field class="input-handler" :rules="[required]" ref="emailInput" label="Email"
+  <div class="login-container">
+    <div class="login-box" :style="boxStyle()">
+      <div class="login-heading">Login Account</div>
+      <div class="login-desc">Please Login to your Account</div>
+      <v-form class="login-form" @submit.prevent>
+        <v-responsive class="input-container">
+          <v-text-field class="login-input" :rules="[required]" ref="emailInput" label="Email"
             variant="outlined"></v-text-field>
-          <v-text-field class="input-handler" :rules="[required]" ref="passwordInput" label="Password"
+          <v-text-field class="login-input" :rules="[required]" ref="passwordInput" label="Password"
             :type="showPassword ? 'text' : 'password'" :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
             @click:append-inner="togglePassword" variant="outlined"></v-text-field>
         </v-responsive>
-
         <div class="forgot-container">
-          <v-btn class="forgot" variant="text">Forgot Password?</v-btn>
+          <v-btn class="forgot-link" variant="text">Forgot Password?</v-btn>
         </div>
-        <div class="hline"></div>
-        <v-btn :loading="loading" @click="login" class="button" type="submit" block>Login</v-btn>
-        <v-alert v-show="error" class="error" variant="tonal" color="error"
+        <div class="horizontal-line"></div>
+        <v-btn :loading="loading" @click="login" class="login-button" type="submit" block>Login</v-btn>
+        <v-alert v-show="error" class="login-error" variant="tonal" color="error"
           text="Incorrect Email or Password!"></v-alert>
         <div class="signup">Don't have an account?
-          <v-btn @click="shift" class="forgot" variant="text">Sign Up!</v-btn>
+          <v-btn @click="shift" class="signup-link" variant="text">Sign Up!</v-btn>
         </div>
       </v-form>
-
     </div>
   </div>
 </template>
@@ -33,26 +29,22 @@
 <script setup>
 import router from "./../router/index";
 import { ref } from "vue";
-import { API, setToken, setUID } from "../main"
+import { API, setToken, setUID } from "../main";
 
 const showPassword = ref(false);
-
 const emailInput = ref(null);
 const passwordInput = ref(null);
-
 const loading = ref(false);
 const error = ref(false);
 
 function required(v) {
-  return !!v || 'Field is required'
+  return !!v || 'Field is required';
 }
-
 
 function boxStyle() {
   return {
     maxHeight: error.value ? '700px' : '650px',
-  }
-
+  };
 }
 
 function togglePassword() {
@@ -80,26 +72,23 @@ function login() {
         })
       });
       const data = await response.json();
-      console.log(data)
+      console.log(data.status);
       loading.value = false;
-      if (data['status'] == '200') {
-        console.log(data['data'])
-        let temp = JSON.parse(data['data'])
-        setToken(temp['token']);
-        setUID(temp['uid']);
+      if (data.status == '200') {
+        console.log(data.data);
+        let temp = JSON.parse(data.data);
+        setToken(temp.token);
+        setUID(temp.uid);
         router.push("/panel");
-      }
-      else {
+      } else {
         error.value = true;
       }
-    }
-    catch (e) {
+    } catch (e) {
       console.log(e);
       error.value = true;
       loading.value = false;
     }
-
-  }
+  };
   checkUser();
 }
 
@@ -109,25 +98,25 @@ function shift() {
 </script>
 
 <style scoped>
-.form {
+.login-form {
   width: 70%;
   display: flex;
   flex-direction: column;
-  align-items: center
+  align-items: center;
 }
 
-.container {
+.login-container {
   position: absolute;
   top: 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100svw;
-  height: 100svh;
-  background: var(--gradient-color)
+  width: 100%;
+  height: 100%;
+  background: var(--gradient-color);
 }
 
-.box {
+.login-box {
   width: 500px;
   height: 90%;
   background-color: white;
@@ -141,25 +130,18 @@ function shift() {
   overflow-y: auto;
 }
 
-
-img {
-  width: 160px;
-  margin-top: 20px;
-  user-select: none;
-}
-
-.heading {
+.login-heading {
   font-size: 32px;
   font-weight: 600;
   margin: 70px 0 20px 0;
 }
 
-.desc {
+.login-desc {
   font-size: 15px;
   margin: 5px 50px;
 }
 
-.hline {
+.horizontal-line {
   width: 100%;
   height: 1px;
   background-color: #ccc;
@@ -167,7 +149,7 @@ img {
   margin-bottom: 20px;
 }
 
-.button {
+.login-button {
   margin-top: 20px;
   background-color: var(--primary);
   color: white;
@@ -178,23 +160,32 @@ img {
   font-weight: 400;
   font-family: "Roboto";
   height: 50px !important;
+  max-height: 50px !important;
 }
 
-.input-bar {
+.input-container {
   width: 100%;
   display: flex;
   flex-grow: 0;
   padding: 40px 0 0 0;
 }
 
-.forgot {
+.forgot-link {
   font-size: 16px;
   color: var(--primary);
   text-transform: none;
   letter-spacing: 0px;
   cursor: pointer;
   padding: 5px;
+}
 
+.signup-link {
+  font-size: 16px;
+  color: var(--primary);
+  text-transform: none;
+  letter-spacing: 0px;
+  cursor: pointer;
+  padding: 5px;
 }
 
 .signup {
@@ -202,7 +193,7 @@ img {
   margin-top: 20px;
   margin-bottom: 40px;
   display: flex;
-  align-items: center
+  align-items: center;
 }
 
 .forgot-container {
@@ -211,21 +202,21 @@ img {
   width: 100%;
 }
 
-.input-handler {
+.login-input {
   width: 100%;
   margin-bottom: 5px;
   text-align: left;
 }
 
-.error {
+.login-error {
   width: 100%;
   margin-top: 20px;
   margin-bottom: -10px;
-
+  max-height: 50px;
 }
 
 @media screen and (max-width: 500px) {
-  .box {
+  .login-box {
     width: 100%;
     height: 100%;
     align-items: center;
@@ -235,20 +226,15 @@ img {
     border-radius: 0%;
   }
 
-  .container {
+  .login-container {
     background: none;
-  }
-
-  .phone {
-    flex-grow: 0;
-    height: 30px;
   }
 
   .form {
     width: 85%;
   }
 
-  .heading {
+  .login-heading {
     margin: 40px 0 10px 0;
   }
 }

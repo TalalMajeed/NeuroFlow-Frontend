@@ -26,21 +26,22 @@
 
           <div class="analyticscontainer">
             <div class="usertitle">Usage Details</div>
-            <div class="userid"><b>Total Generated:</b> 10</div>
-            <div class="userid"><b>Total Saved Boards:</b> 3</div>
-            <div class="userid"><b>Remaining Daily Credits:</b> 20%</div>
+            <div class="userid"><b>Boards Saved Today:</b> {{ props.user["today"] }}</div>
+            <div class="userid"><b>Total Generated:</b> {{ props.user["total"] }}</div>
+            <div class="userid"><b>Total Saved Boards:</b> {{ props.user["diagramCount"] }}</div>
+
           </div>
           <div class="graphdata">
             <div class="keycontainer">
               <div class="key">
                 <div class="key1"></div>
-                <div><b>Total Credits:
-                  </b> 10</div>
+                <div><b>Saved Today
+                  </b></div>
               </div>
               <div class="key">
                 <div class="key2"></div>
-                <div><b>Remaining Credits:
-                  </b> 3</div>
+                <div><b>Total Saved
+                  </b></div>
               </div>
             </div>
             <div class="graphcontainer">
@@ -54,17 +55,27 @@
     <div class="title" style="margin-top:50px;">Recent Boards</div>
     <div class="divider">
       <div class="smallercontainer">
-        <div class="boxcontainer" v-for="i in ['Wordpress Website', 'GenAI 2024 Project']">
+        <div class="boxcontainer" v-for="i in userDiagrams">
           <v-card class="mx-auto">
             <v-img max-height="250px" src="@/assets/document.png" cover></v-img>
-            <div class="textfield" variant="underlined" placeholder="ERD 1">{{ i }}</div>
+            <div class="textfield">{{ i['name'] }}</div>
             <div class="hline"></div>
             <div class="boxcontainer-sub">
-              <v-btn class="boxcontainer-button" text="Open Board"></v-btn>
+              <v-btn class="boxcontainer-button" text="Open Board" :loading="i['loading']"
+                @click="() => { openBoard(i); }"></v-btn>
               <img class="genailogo" height="35px" width="35px" src="../assets/logo.png" cover></img>
             </div>
           </v-card>
-
+        </div>
+        <div class="boxcontainer" v-if="userDiagrams.length < 1">
+          <v-card class="mx-auto no-recent">
+            <div>No Recent Diagram!</div>
+          </v-card>
+        </div>
+        <div class="boxcontainer" v-if="userDiagrams.length < 2">
+          <v-card class="mx-auto no-recent">
+            <div>No Recent Diagram!</div>
+          </v-card>
         </div>
       </div>
       <div class="container2">
@@ -102,22 +113,56 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue';
+import { defineProps, ref, watch, defineEmits } from 'vue';
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, ArcElement } from 'chart.js'
 import { Pie } from 'vue-chartjs'
-import { setToken, setUID } from "../main";
+import { setToken, setUID, TOKEN, API, UID } from "../main";
 import router from "../router";
-ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, ArcElement)
 
+
+
+
+ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, ArcElement)
+const emit = defineEmits(['trigger']);
 
 const props = defineProps({
   user: Object,
-  setPage: Function
+  setPage: Function,
+  page: Number
 });
+
+const getRecent = async () => {
+  try {
+    const response = await fetch(`${API}/getRecent`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${TOKEN}`
+      },
+      body: JSON.stringify({
+        'uid': UID
+      })
+    });
+    const data = await response.json();
+
+    if (data.status == '200') {
+      console.log(JSON.parse(data['data']));
+      userDiagrams.value = JSON.parse(data['data']);
+    }
+    else {
+      throw new Error(data['message'])
+    }
+  }
+  catch (err) {
+    console.log(err);
+  }
+}
+
+const userDiagrams = ref(props.user['diagrams']);
 const chartData = {
-  labels: ['Remaining Credits', 'Total Credits'],
+  labels: ['Saved Today', 'Total Saved'],
   datasets: [{
-    data: [40, 20],
+    data: [(props.user["today"]), props.user["diagramCount"]],
     backgroundColor: [
       'rgba(155, 155, 155, 0.2)',
       'rgba(54, 162, 235, 0.2)',
@@ -138,6 +183,13 @@ const chartOptions = {
   }
 }
 
+watch(() => props.page, (next) => {
+  userDiagrams.value = [];
+  if (next == 0) {
+    getRecent();
+  }
+});
+
 const signOut = () => {
   setToken("");
   setUID("");
@@ -151,6 +203,20 @@ const userPage = () => {
 const boardPage = () => {
   props.setPage(3);
 }
+
+const openBoard = (e) => {
+  emit("trigger", e["DiagramID"]);
+
+  let t = e["loading"];
+
+  userDiagrams.value = userDiagrams.value.map(d => {
+    if (d["DiagramID"] == e["DiagramID"]) {
+      d["loading"] = !t;
+    }
+    return d;
+  });
+}
+
 </script>
 
 
@@ -407,5 +473,16 @@ const boardPage = () => {
   width: 80%;
   height: 40px !important;
   margin-bottom: 30px;
+}
+
+.no-recent {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 450px;
+  width: 100%;
+  font-size: 1.5rem;
+  font-weight: 300;
+  color: var(--secondary);
 }
 </style>

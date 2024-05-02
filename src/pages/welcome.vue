@@ -1,17 +1,17 @@
 <template>
-    <div class="container">
-        <div class="box">
-            <img src="../assets/Logo.png" alt="">
-            <div class="heading">NeuroFlow AI</div>
-            <div class="desc">An application which uses Generative AI to create Work Flows for Coding Projects &
+    <div class="landing-container">
+        <div class="landing-box">
+            <img src="../assets/Logo.png" alt="" class="landing-logo">
+            <div class="landing-heading">NeuroFlow AI</div>
+            <div class="landing-desc">An application which uses Generative AI to create Work Flows for Coding Projects &
                 Applications</div>
-            <div class="desc">Dear User! Welcome to NeuroFlow</div>
+            <div class="landing-desc">Dear User! Welcome to NeuroFlow</div>
 
             <div class="spacer phone"></div>
-            <div class="hline"></div>
+            <div class="landing-hline"></div>
             <div class="spacer phone"></div>
-            <v-btn @click="login" class="button">Get Started</v-btn>
-            <div class="copyright">© TechFlow - SEECS - GenAI 2024</div>
+            <v-btn @click="login" class="landing-button">Get Started</v-btn>
+            <div class="landing-copyright">© TechFlow - SEECS NUST - GenAI 2024</div>
         </div>
     </div>
 </template>
@@ -25,7 +25,7 @@ function login() {
 </script>
 
 <style scoped>
-.container {
+.landing-container {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -35,7 +35,7 @@ function login() {
 }
 
 
-.box {
+.landing-box {
     width: 500px;
     height: 90%;
     max-height: 650px;
@@ -50,40 +50,40 @@ function login() {
     overflow-y: auto;
 }
 
-img {
+.landing-logo {
     width: 120px;
     margin-top: 50px;
     margin-bottom: 20px;
     user-select: none;
 }
 
-.heading {
+.landing-heading {
     font-size: 32px;
     font-weight: 600;
     margin: 10px 0 20px 0;
 }
 
-.desc {
+.landing-desc {
     font-size: 17px;
     margin-top: 10px;
     margin: 10px 50px;
 }
 
-.hline {
+.landing-hline {
     width: 75%;
     height: 1px;
     background-color: #ccc;
     margin-top: 20px;
 }
 
-.copyright {
+.landing-copyright {
     font-size: 17px;
     color: gray;
     margin-top: 20px;
     margin-bottom: 30px;
 }
 
-.button {
+.landing-button {
     margin-top: 20px;
     background-color: var(--primary);
     color: white;
@@ -98,7 +98,7 @@ img {
 }
 
 @media screen and (max-width: 500px) {
-    .box {
+    .landing-box {
         width: 100%;
         height: 100%;
         max-height: 100%;
@@ -111,18 +111,16 @@ img {
         height: 30px;
     }
 
-    .desc {
+    .landing-desc {
         margin: 10px 20px;
     }
 
-    .button {
+    .landing-button {
         width: 85%;
     }
 
-    .hline {
+    .landing-hline {
         width: 85%;
     }
-
-
 }
 </style>
